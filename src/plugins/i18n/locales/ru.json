@@ -1,0 +1,39 @@
+{
+  "Home": "dom",
+  "Second page": "ikkinchi page",
+  "settings": "Настройки",
+  "no_data": "Нет доступных данных",
+  "success": "Успешный",
+  "rows_per_page": "Har bir sahifadagi qatorlar",
+  "no_internet": "Internet aloqasi mavjud emas. Iltimos, ulanishingizni tekshiring va qayta urinib ko‘ring.",
+  "required_fiels": "Заполните обязательные поля..",
+  "settingsModule": {
+    "control": "Управление",
+    "add": "Добавить",
+    "username": "Имя пользователя",
+    "full_name": "Имя (Ф.И.О)",
+    "type": "Тип",
+    "mfo": "МФО",
+    "action": "действие",
+    "firstname": "Имя",
+    "surname": "Фамилия",
+    "emai_address": "Адрес электронной почты",
+    "user_type": "Тип пользователя",
+    "branch": "Филиал",
+    "activity": "Активность",
+    "send": "Отправить",
+    "edit": "Редактировать"
+  },
+  "login": {
+    "welcome_kms": "Добро пожаловать в KMS!",
+    "please_log": "Пожалуйста, войдите в свою учетную запись и начните приключение.",
+    "username": "Логин",
+    "enter_username": "Введите логин",
+    "password": "Пароль",
+    "loginButton": "Войти"
+  },
+  "clients": {
+    "title": "Клиенты",
+    "all": "Все"
+  }
+}

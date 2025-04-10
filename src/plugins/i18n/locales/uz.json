@@ -1,0 +1,39 @@
+{
+  "Home": "assosiy",
+  "Second page": "ikkinchi page",
+  "settings": "Sozlamalar",
+  "no_data": "Maʼlumotlar mavjud emas",
+  "success": "Muvaffaqiyatli",
+  "rows_per_page": "Har bir sahifadagi qatorlar",
+  "no_internet": "Internet aloqasi mavjud emas. Iltimos, ulanishingizni tekshiring va qayta urinib ko‘ring.",
+  "required_fiels": "Majburi bo'lgan maydonlarni to'ldiring.",
+  "settingsModule": {
+    "control": "Nazorat",
+    "add": "Qo'shish",
+    "username": "Foydalanuvchi nomi",
+    "full_name": "Ism (to'liq ism)",
+    "type": "Turi",
+    "mfo": "MFO",
+    "action": "harakat",
+    "firstname": "Ism",
+    "surname": "Familiya",
+    "emai_address": "E-pochta manzili",
+    "user_type": "Foydalanuvchi turi",
+    "branch": "Filial",
+    "activity": "Faoliyat",
+    "send": "Yuborish",
+    "edit": "Tahrirlash"
+  },
+  "login": {
+    "welcome_kms": "KMSga xush kelibsiz!",
+    "please_log": "Iltimos, hisobingizga kiring va sarguzashtingizni boshlang.",
+    "username": "Login",
+    "enter_username": "Loginni kiriting",
+    "password": "Parol",
+    "loginButton": "Tizimga kirish"
+  },
+  "clients": {
+    "title": "Mijozlar",
+    "all": "Hammasi"
+  }
+}
