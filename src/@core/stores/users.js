@@ -39,6 +39,12 @@ export const useUsers = defineStore("users", {
         },
         async fetOneUser(id) {
             return await $api(`api/user/${id}`)
+        },
+        async changePassword(id, data) {
+            return await $api(`api/user/password/${id}`, {
+                method: "Patch",
+                body: data
+            })
         }
 
     }

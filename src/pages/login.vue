@@ -1,12 +1,13 @@
 <script setup>
-import { useConfigStore } from '@/@core/stores/config';
+import { useToast } from '@/@core/stores/toastConfig';
 import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw';
 import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw';
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer';
 import { themeConfig } from '@themeConfig';
+import { nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const store = useConfigStore()
+const store = useToast()
 definePage({
   meta:
   {
@@ -96,9 +97,10 @@ const login = () => {
     useCookie('userData').value = data
     useCookie('accessToken').value = data.token
     store.successToast(t('success'))
+    nextTick(() => {
+      router.replace(route.query.to ? String(route.query.to) : '/')
 
-    router.replace(route.query.to ? String(route.query.to) : '/')
-
+    })
 
   }).catch(error => {
     store.errorToast(error.response._data.message)

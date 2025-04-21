@@ -8,17 +8,26 @@ export default [
   },
   {
     title: 'clients.title',
-    // to: { name: 'second-page' },
-    icon: { icon: 'tabler-file' },
-    children: [
-      {
-        title: 'clients.all', to: 'users', action: 'read',
-        subject: 'AclDemo',
-      },
-      {
-        title: 'Second page', to: 'users', action: 'read',
-        subject: 'AclDemo',
-      }],
+    to: { name: 'customers' },
+    icon: { icon: 'tabler-users' },
+    // children: [
+    //   {
+    //     title: 'clients.all', to: 'customers-all', action: 'read',
+    //     subject: 'AclDemo',
+    //   },
+
+    //   {
+    //     title: 'clients.new', to: 'customers-new', action: 'read',
+    //     subject: 'AclDemo',
+    //   },
+    //   {
+    //     title: 'clients.approved', to: 'customers-approved', action: 'read',
+    //     subject: 'AclDemo',
+    //   },
+    //   {
+    //     title: 'clients.rejected', to: 'customers-rejected', action: 'read',
+    //     subject: 'AclDemo',
+    //   }],
     action: 'read',
     subject: 'AclDemo',
   },
@@ -26,6 +35,20 @@ export default [
     title: 'settings',
     to: { name: 'settings' },
     icon: { icon: 'tabler-settings' },
+    action: 'read',
+    subject: 'AclDemo',
+  },
+  {
+    title: 'requests.request',
+    to: { name: 'requests' },
+    icon: { icon: 'tabler-sort-descending' },
+    action: 'read',
+    subject: 'AclDemo',
+  },
+  {
+    title: 'Certificates.title',
+    to: { name: 'certificates' },
+    icon: { icon: 'tabler-file-certificate' },
     action: 'read',
     subject: 'AclDemo',
   },

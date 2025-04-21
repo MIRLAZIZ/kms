@@ -1,70 +1,117 @@
-<script lang="ts" setup>
-const isDialogVisible = ref(false)
-const firstName = ref('')
-const middleName = ref('')
-const lastName = ref('')
-const email = ref('')
-const password = ref('')
-const age = ref()
-const interest = ref<string[]>([])
+<script setup>
+import { useToast } from '@/@core/stores/toastConfig'
+import { useUsers } from '@/@core/stores/users'
+import { useI18n } from 'vue-i18n'
+const changePassword = ref({
+    password: null,
+    password_confirmation: null
+})
+const refForm = ref(null)
+const store = useUsers()
+const storeToast = useToast()
+const { t } = useI18n()
+
 
 const props = defineProps({
     isDialogVisible: {
-        type: Boolean,
-
+        type: Boolean
+    },
+    passwordId: {
+        type: Number || null
     }
 })
+
+const emit = defineEmits(['update:isDialogVisible', 'update:passwordId'])
+const isPasswordVisible = ref(false)
+const isConfirmPasswordVisible = ref(false)
+
+
+const closeModal = () => {
+    emit('update:isDialogVisible', false)
+    emit('update:passwordId', null)
+
+    nextTick(() => {
+        refForm.value?.reset()
+        refForm.value?.resetValidation()
+    })
+
+}
+const handleSuccess = () => {
+    storeToast.successToast(t('success'))
+    emit('update:isDialogVisible', false)
+    emit('update:passwordId', null)
+    nextTick(() => {
+        refForm.value?.reset()
+        refForm.value?.resetValidation()
+    })
+}
+
+
+const sendPassword = () => {
+    refForm.value?.validate().then(({ valid }) => {
+        if (valid) {
+            store.changePassword(props.passwordId, changePassword.value)
+                .then(() => {
+                    handleSuccess()
+                }).catch(error => {
+                    storeToast.errorsNotfications(error.response._data.errors)
+
+                })
+
+        }
+
+    })
+}
+
 </script>
 
 <template>
     <VDialog v-model="props.isDialogVisible" max-width="600">
-        <!-- Dialog Activator -->
-        <template #activator="{ props }">
-            <VBtn v-bind="props">
-                Open Dialog
-            </VBtn>
-        </template>
 
         <!-- Dialog close btn -->
-        <DialogCloseBtn @click="props.isDialogVisible = !props.isDialogVisible" />
+        <DialogCloseBtn @click="closeModal" />
 
         <!-- Dialog Content -->
         <VCard title="User Profile">
-            <VCardText>
-                <VRow>
-                    <VCol cols="12" sm="6" md="4">
-                        <AppTextField v-model="firstName" label="First Name" placeholder="John" />
-                    </VCol>
-                    <VCol cols="12" sm="6" md="4">
-                        <AppTextField v-model="middleName" label="Middle Name" placeholder="peter" />
-                    </VCol>
-                    <VCol cols="12" sm="6" md="4">
-                        <AppTextField v-model="lastName" label="Last Name" persistent-hint placeholder="Doe" />
-                    </VCol>
-                    <VCol cols="12">
-                        <AppTextField v-model="email" label="Email" placeholder="johndoe@email.com" />
-                    </VCol>
-                    <VCol cols="12">
-                        <AppTextField v-model="password" label="Password" autocomplete="on" type="password"
-                            placeholder="············" />
-                    </VCol>
-                    <VCol cols="12" sm="6">
-                        <AppTextField v-model="age" label="Age" type="number" placeholder="18" />
-                    </VCol>
-                    <VCol cols="12" sm="6">
-                        <AppTextField v-model="interest" label="Interests" placeholder="Sports, Music, Movies" />
-                    </VCol>
-                </VRow>
-            </VCardText>
+            <VForm ref="refForm" @submit.prevent="sendPassword">
+                <VCardText>
 
-            <VCardText class="d-flex justify-end flex-wrap gap-3">
-                <VBtn variant="tonal" color="secondary" @click="isDialogVisible = false">
-                    Close
-                </VBtn>
-                <VBtn @click="poisDialogVisible = false">
-                    Save
-                </VBtn>
-            </VCardText>
+                    <VRow>
+
+                        <VCol cols="12">
+                            <AppTextField v-model="changePassword.password" label="Password" autocomplete="on"
+                                placeholder="············" :type="isPasswordVisible ? 'text' : 'password'"
+                                :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                                @click:append-inner="isPasswordVisible = !isPasswordVisible" :requireInput="true"
+                                :rules="[requiredValidator, minLengthValidator(changePassword.password, 8)]" />
+                        </VCol>
+
+                        <VCol cols="12">
+                            <AppTextField v-model="changePassword.password_confirmation" label="Password"
+                                placeholder="············" :type="isConfirmPasswordVisible ? 'text' : 'password'"
+                                :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                                @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
+                                :requireInput="true"
+                                :rules="[confirmedValidator(changePassword.password_confirmation, changePassword.password)]" />
+                        </VCol>
+
+
+                    </VRow>
+                </VCardText>
+
+
+                <VCardText class="d-flex justify-end flex-wrap gap-3">
+                    <VBtn variant="tonal" color="secondary" @click="closeModal">
+                        Close
+                    </VBtn>
+                    <VBtn type="submit">
+                        Save
+                    </VBtn>
+                </VCardText>
+
+            </VForm>
+
+
         </VCard>
     </VDialog>
 </template>

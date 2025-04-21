@@ -22,7 +22,9 @@
     "branch": "Филиал",
     "activity": "Активность",
     "send": "Отправить",
-    "edit": "Редактировать"
+    "edit": "Редактировать",
+    "change": "Изменять",
+    "user_deleted": "Пользователь успешно удален."
   },
   "login": {
     "welcome_kms": "Добро пожаловать в KMS!",
@@ -34,6 +36,38 @@
   },
   "clients": {
     "title": "Клиенты",
-    "all": "Все"
+    "all": "Все",
+    "new": "Новые",
+    "approved": "Утвержденные",
+    "rejected": "Отклоненные",
+    "token_nomer": "Токен №",
+    "owner": "владелец",
+    "city": "Город",
+    "address": "адрес",
+    "mail": "почта",
+    "subdivision": "подразделение",
+    "inn": "инн",
+    "type": "Тип клиента",
+    "ownerNameCN": "Имя владельца (CN)",
+    "cityL": "Город (L)",
+    "regionS": "Область (S)",
+    "countryC": "Страна (двухбуквенный индекс) (C)",
+    "addressStreet": "Адрес (STREET)",
+    "emailAddressE": "Адрес электронной почты (E)",
+    "organizationO": "Организация (O)",
+    "subdivisionOU": "Подразделение (OU)",
+    "personalIdentificationNumber": "ПИНФЛ",
+    "phoneNumber": "Телефон номер",
+    "attachRequestFile": "Прикрепить файл запроса",
+    "chooseFile": "Выберите файл",
+    "internet_banking": "Интернет банкинг",
+    "mobile_banking": "Мобильный банкинг",
+    "iabs_user": "Пользователь iABS"
+  },
+  "requests": {
+    "request": "Запросы"
+  },
+  "Certificates": {
+    "title": "Сертификати"
   }
 }

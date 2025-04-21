@@ -92,7 +92,6 @@ const onSubmit = () => {
             storeToast.errorToast(error.response._data.message)
           })
       } else {
-        console.log('ishaldddddddiiiiiii');
 
         store.updateUsers(props.update_dataId, userData.value)
           .then(() => {
@@ -180,7 +179,7 @@ watch(() => props.update_dataId, (id) => {
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible" :requireInput="true"
-                  :rules="!props.update_dataId ? [] : [requiredValidator]" />
+                  :rules="!props.update_dataId ? [] : [requiredValidator, minLengthValidator(userData.password, 8)]" />
               </VCol>
 
 

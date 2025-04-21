@@ -5,6 +5,7 @@ import { useUsers } from '@/@core/stores/users'
 import DeleteDialog from "@/components/DeleteDialog.vue"
 import { useI18n } from 'vue-i18n'
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import EdintPassword from './editPassword.vue'
 
 
 const { t } = useI18n()
@@ -18,6 +19,8 @@ definePage({
 const deleteDialog = ref(false)
 const itemId = ref(null)
 const storetoast = useToast()
+const isDialogVisible = ref(false)
+const passwordId = ref(null)
 
 
 
@@ -25,17 +28,19 @@ const storetoast = useToast()
 const deleteItemConfirm = () => {
     store.deleteUsers(itemId.value)
         .then(() => {
-            storetoast.successToast('O\'chirildi')
+            storetoast.successToast(t('settingsModule.user_deleted'))
             deleteDialog.value = false
             itemId.value = null
             refresh()
         }).catch(error => {
+            storetoast.errorsNotfications(error.response._data.errors)
+
 
         })
 }
 
 
-const options = ref({ page: 1, itemsPerPage: 1, sortBy: [''], sortDesc: [false] })
+const options = ref({ page: 1, itemsPerPage: 12, sortBy: [''], sortDesc: [false] })
 const isAddNewUserDrawerVisible = ref(false)
 const load = ref(true)
 const store = useUsers()
@@ -153,6 +158,13 @@ onMounted(() => {
                                     </template>
                                     <VListItemTitle>Delete</VListItemTitle>
                                 </VListItem>
+
+                                <VListItem @click="isDialogVisible = true, passwordId = item.id">
+                                    <template #prepend>
+                                        <VIcon icon="tabler-lock-cog" />
+                                    </template>
+                                    <VListItemTitle>{{ $t('settingsModule.change') }}</VListItemTitle>
+                                </VListItem>
                             </VList>
                         </VMenu>
                     </VBtn>
@@ -163,34 +175,11 @@ onMounted(() => {
 
             </template>
 
-            <!-- <template #headers>
 
 
-
-            </template> -->
-            <!-- full name -->
-            <!-- <template #item.fullName="{ item }">
-                <div class="d-flex align-center">
-                    <VAvatar size="32" :color="item.avatar ? '' : 'primary'"
-                        :class="item.avatar ? '' : 'v-avatar-light-bg primary--text'"
-                        :variant="!item.avatar ? 'tonal' : undefined">
-                        <VImg v-if="item.avatar" :src="item.avatar" />
-                        <span v-else>{{ avatarText(item.fullName) }}</span>
-                    </VAvatar>
-                    <div class="d-flex flex-column ms-3">
-                        <span class="d-block font-weight-medium text-high-emphasis text-truncate">{{ item.fullName
-                        }}</span>
-                        <small>{{ item.post }}</small>
-                    </div>
-                </div>
-            </template> -->
-
-            <!-- status -->
-            <!-- <template #item.status="{ item }">
-                <VChip :color="resolveStatusVariant(item.status).color" class="font-weight-medium" size="small">
-                    {{ resolveStatusVariant(item.status).text }}
-                </VChip>
-            </template> -->
+            <template #item.id="{ index }">
+                <span>{{ index + 1 }}</span>
+            </template>
 
 
 
@@ -217,6 +206,11 @@ onMounted(() => {
     <DeleteDialog v-model:delete-dialog="deleteDialog" @closeDelete="deleteDialog = false"
         @deleteItemConfirm="deleteItemConfirm" />
 
+    <EdintPassword v-model:isDialogVisible="isDialogVisible" v-model:passwordId="passwordId" />
+
+
+
+
 </template>
 
 
@@ -230,4 +224,8 @@ onMounted(() => {
 /* .v-data-table thead th:nth-child(1) {
     border-spacing: 0;
 } */
+.v-data-table tbody tr:hover {
+    background-color: #f5f5f5;
+    /* Hover holatidagi fon rangi */
+}
 </style>
