@@ -1,6 +1,5 @@
 <script setup>
-
-import { useClient } from '@/@core/stores/client'
+import { useCertificate } from '@/@core/stores/certicate'
 import { useToast } from '@/@core/stores/toastConfig'
 import EditClient from '@/components/clients/EditClient.vue'
 import DeleteDialog from "@/components/DeleteDialog.vue"
@@ -26,7 +25,7 @@ const isDialogVisible = ref(false)
 
 
 const deleteItemConfirm = () => {
-    store.deleteClient(itemId.value)
+    store.deleteCertificate(itemId.value)
         .then(() => {
             storetoast.successToast(t('settingsModule.user_deleted'))
             deleteDialog.value = false
@@ -43,22 +42,26 @@ const deleteItemConfirm = () => {
 const options = ref({ page: 1, itemsPerPage: 12, sortBy: [''], sortDesc: [false] })
 const isAddNewUserDrawerVisible = ref(false)
 const load = ref(true)
-const store = useClient()
+const store = useCertificate()
 const updateDataId = ref(null)
+const status = ref(null)
+
 
 
 
 const headers = [
     { title: '№', key: 'id' },
     { title: t('clients.owner'), key: 'cname' },
-    { title: t('clients.city'), key: 'location' },
-    { title: t('clients.address'), key: 'state' },
-    { title: t('clients.mail'), key: 'email' },
-    { title: t('clients.subdivision'), key: 'org_unit' },
-    { title: t('clients.inn'), key: 'inn' },
-    { title: t('settingsModule.branch'), key: 'branch' },
+    { title: t('clients.city'), key: 'token_sn' },
+    { title: t('clients.address'), key: 'cert_sn' },
+    { title: t('clients.mail'), key: 'cert_from' },
+    { title: t('clients.subdivision'), key: 'cert_to' },
+    { title: t('clients.inn'), key: 'status' },
     { title: t('settingsModule.action'), key: 'actions' },
+
 ]
+
+
 
 
 
@@ -73,10 +76,9 @@ const editUser = (id) => {
 }
 
 const refresh = () => {
-    store.fetchClient(options.value.itemsPerPage, options.value.page)
+    store.fetchCertificate(options.value.itemsPerPage, options.value.page)
         .then(() => {
-            useClient
-            useClient
+
 
             load.value = false
         }).catch(error => {
@@ -86,7 +88,7 @@ const refresh = () => {
 
             }
             else {
-                storetoast.errorsNotfications(error.response._data.errors)
+                // storetoast.errorsNotfications(error.response._data.errors)
 
             }
 
@@ -110,6 +112,21 @@ const getRowProps = (item) => {
     if (item.id === 1) return 'green-row'
     return {}
 }
+
+const statuFilterData = ref([
+    { value: 3, label: 'Активный' },
+    { value: 1, label: 'Отклоненные' },
+    { value: 2, label: 'Обновлен' },
+
+])
+watch(status, (newValue) => {
+    if (newValue) {
+        store.filterCertificate(newValue)
+    }
+    else {
+        refresh()
+    }
+})
 </script>
 
 <template>
@@ -132,8 +149,10 @@ const getRowProps = (item) => {
                 </VCol>
                 <!-- 👉 Select Status -->
                 <VCol cols="12" sm="4">
-                    <AppSelect placeholder="Select Status" :items="[1, 2, 3, 4]" clearable clear-icon="tabler-x" />
+                    <AppSelect placeholder="Select Status" :items="statuFilterData" v-model="status" clearable
+                        clear-icon="tabler-x" item-value="value" item-title="label" />
                 </VCol>
+
 
                 <VCol cols="12" sm="5">
                     <div class="w-100 h-100 border rounded d-flex align-center justify-space-between px-4">
@@ -176,7 +195,7 @@ const getRowProps = (item) => {
             </VCol>
 
         </VRow>
-        <VDataTable :headers="headers" :items="store.clients.data || []" :loading="load" :hover="true"
+        <VDataTable :headers="headers" :items="store.certificates?.data || []" :loading="load" :hover="true"
             loading-text="yuklanmoqda" :row-props="({ item, index }) => {
                 return {
                     class: index % 2 === 0 ? 'green-row' : 'red-row',
@@ -254,9 +273,9 @@ const getRowProps = (item) => {
             <template #bottom>
                 <VCardText class="pt-2">
                     <div class="d-flex justify-end">
-                        <VPagination v-if="store.clients?.pagination" v-model="options.page"
+                        <VPagination v-if="store.certificates?.pagination" v-model="options.page"
                             :total-visible="$vuetify.display.smAndDown ? 3 : 5"
-                            :length="Math.ceil(store.clients?.pagination?.total / options.itemsPerPage)"
+                            :length="Math.ceil(store.certificates?.pagination?.total / options.itemsPerPage)"
                             @click="refresh" />
                     </div>
                 </VCardText>

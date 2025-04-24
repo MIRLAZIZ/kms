@@ -80,15 +80,15 @@
 
                 load.value = false
             }).catch(error => {
-                console.log(error.response.status);
-                if (error.response.status >= 500) {
-                    storetoast.errorToast('server xatoligi')
 
-                }
-                else {
-                    storetoast.errorsNotfications(error.response._data.errors)
+                // if (error.response.status >= 500) {
+                //     storetoast.errorToast('server xatoligi')
 
-                }
+                // }
+                // else {
+                //     storetoast.errorsNotfications(error.response._data.errors)
+
+                // }
 
                 load.value = false
             })

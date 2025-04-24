@@ -205,7 +205,7 @@ onMounted(() => {
     </VCard>
 
 
-    <AddDevices v-model:isDrawerOpen="isAddNewUserDrawerVisible" />
+    <AddDevices v-model:isDrawerOpen="isAddNewUserDrawerVisible" @refresh="refresh" />
 
 
     <DeleteDialog v-model:delete-dialog="deleteDialog" @closeDelete="deleteDialog = false"

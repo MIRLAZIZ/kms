@@ -37,10 +37,10 @@ export const useClient = defineStore("client", {
         // updata client
         async updateClient(id, data) {
             return await $api(`api/client/update/${id}`, {
-                method: 'Post',
-                body: data
-
-
+                method: 'POST',
+                body: data,
+                redirect: 'manual',  // <-- bu redirectni bloklaydi
+                credentials: 'include'
             })
         },
         // get one client 

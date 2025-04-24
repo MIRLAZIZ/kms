@@ -77,8 +77,13 @@ const typeclient = ref([
 ])
 
 const onSubmit = () => {
+    console.log(clientData.value);
+
     refForm.value?.validate().then(({ valid }) => {
+
+
         const formDataa = new FormData()
+        formDataa.append('data', 'test')
 
         formDataa.append('address', clientData.value.address)
         formDataa.append('client_type', clientData.value.client_type)
@@ -91,33 +96,28 @@ const onSubmit = () => {
         formDataa.append('organization', clientData.value.organization)
         formDataa.append('phone', clientData.value.phone)
         formDataa.append('pinfl', clientData.value.pinfl)
-        // formDataa.append('sname', clientData.value.sname)
         formDataa.append('state', clientData.value.state)
         formDataa.append('fileToUpload', clientData.value.fileToUpload)
-        console.log(formDataa);
 
 
-        console.log('validdan tashqari');
 
 
 
         if (valid) {
-            console.log('valid');
 
             store.updateClient(props.update_dataId, formDataa)
-                .then(res => {
-                    console.log('dadsfasdfa');
+            // .then(res => {
 
 
-                    // handleSuccess()
+            //     // handleSuccess()
 
 
 
-                }).catch(error => {
-                    console.log(error, 'errror');
+            // }).catch(error => {
+            //     console.log(error, 'errror');
 
-                    // storeToast.errorToast(error.response._data.message)
-                })
+            //     // storeToast.errorToast(error.response._data.message)
+            // })
 
 
 

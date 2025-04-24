@@ -1,16 +1,15 @@
 <script setup>
-import { useClient } from '@/@core/stores/client'
+import { useRequests } from '@/@core/stores/request'
 import { useToast } from '@/@core/stores/toastConfig'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
 
 
-const store = useClient()
+const store = useRequests()
 const storeToast = useToast()
 const { t } = useI18n()
-const route = useRoute()
+
 
 
 
@@ -19,7 +18,11 @@ const props = defineProps({
         type: Boolean,
         required: true,
     },
-    update_dataId: {
+    status_type: {
+        type: String || null,
+        default: null
+    },
+    request_id: {
         type: Number || null,
         default: null
     }
@@ -33,25 +36,16 @@ const emit = defineEmits([
 
 const isFormValid = ref(false)
 const refForm = ref()
-
-
-
-
-
-
-
-const deviceData = ref({
-    client_id: null,
-    type: null,
-    device_id_type: null,
-    status: true,
-    device_id_number: null
+const statusData = ref({
+    cng: null,
+    status: null,
 
 })
-const isPasswordVisible = ref(false)
 
 const handleSuccess = () => {
     storeToast.successToast(t('success'))
+
+
     emit('update:isDrawerOpen', false)
     emit('update:update_dataId', null)
     emit('refresh')
@@ -67,25 +61,33 @@ const closeNavigationDrawer = () => {
     emit('update:update_dataId', null)
     nextTick(() => {
         refForm.value?.reset()
-        deviceData.value.status = true
+        statusData.value.status = true
         refForm.value?.resetValidation()
     })
 }
 
 const onSubmit = () => {
-    refForm.value?.validate().then(({ valid }) => {
-        deviceData.value.client_id = route.params.id
 
+    refForm.value?.validate().then(({ valid }) => {
 
         if (valid) {
-            store.createDevice(deviceData.value)
+
+            if (props.status_type == 'confirmation') {
+                statusData.value.status = '1'
+                statusData.value.comment = '123'
+            } else {
+                statusData.value.status = '2'
+                statusData.value.cng = '0'
+
+
+            }
+
+            store.createStatus(props.request_id, statusData.value)
                 .then(res => {
                     handleSuccess()
-
                 }).catch(error => {
                     storeToast.errorToast(error.response._data.message)
                 })
-
         } else {
             storeToast.errorToast(t('required_fiels'))
 
@@ -110,7 +112,8 @@ const handleDrawerModelValueUpdate = val => {
     <VNavigationDrawer temporary :width="400" location="end" class="scrollable-content"
         :model-value="props.isDrawerOpen" @update:model-value="handleDrawerModelValueUpdate">
         <!-- 👉 Title -->
-        <AppDrawerHeaderSection :title="!props.update_dataId ? $t('settingsModule.add') : $t('settingsModule.edit')"
+        <AppDrawerHeaderSection
+            :title="props.status_type == 'confirmation' ? 'Sertifikat turini tanlang' : 'Fikr qoldiring'"
             @cancel="closeNavigationDrawer" />
 
         <PerfectScrollbar :options="{ wheelPropagation: false }">
@@ -119,48 +122,42 @@ const handleDrawerModelValueUpdate = val => {
 
 
                     <!-- 👉 Form -->
-                    <VForm ref="refForm" v-model="isFormValid" @submit.prevent="onSubmit">
+                    <VForm ref="refForm" v-model="isFormValid" @submit.prevent="onSubmit"
+                        v-if="props.status_type == 'confirmation'">
                         <VRow>
 
+
+
+
+                            <VCol cols="12">
+                                <AppSelect :items="[{ value: '1', label: 'label' }]" v-model="statusData.cng"
+                                    item-value="value" item-title="label" :rules="[requiredValidator]" />
+                            </VCol>
+
+
+
+                            <!-- 👉 Submit and Cancel -->
+                            <VCol cols="12">
+                                <VBtn type="submit" class="me-3">
+                                    {{ $t('settingsModule.send') }}
+                                </VBtn>
+
+                            </VCol>
+
+
+
+
+                        </VRow>
+                    </VForm>
+
+                    <!-- 👉 Form -->
+                    <VForm ref="refForm" v-model="isFormValid" @submit.prevent="onSubmit" v-else>
+                        <VRow>
                             <!-- 👉 type -->
                             <VCol cols="12">
-                                <AppTextField v-model="deviceData.type" label="type " :requireInput="true"
-                                    :rules="[requiredValidator]" />
+                                <AppTextField v-model="statusData.comment" :rules="[requiredValidator]" label="izox"
+                                    :requireInput="true" type="text" />
                             </VCol>
-
-
-                            <!-- 👉 device_id_type -->
-                            <VCol cols="12">
-                                <AppTextField v-model="deviceData.device_id_number" label="device_id_number"
-                                    :requireInput="true" :rules="[requiredValidator]" />
-                            </VCol>
-
-
-                            <!-- 👉 device_id_type -->
-                            <VCol cols="12">
-                                <AppTextField v-model="deviceData.device_id_type" label="device_id_type"
-                                    :rules="[requiredValidator]" :requireInput="true" />
-                            </VCol>
-
-
-
-                            <!-- status -->
-                            <VCol class="d-flex  justify-space-between">
-                                <div>{{ $t('settingsModule.activity') }}</div>
-                                <VSwitch v-model="deviceData.status" />
-
-                            </VCol>
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -174,6 +171,10 @@ const handleDrawerModelValueUpdate = val => {
                                 </VBtn>
 
                             </VCol>
+
+
+
+
                         </VRow>
                     </VForm>
                 </VCardText>
