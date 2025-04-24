@@ -127,6 +127,11 @@ watch(status, (newValue) => {
         refresh()
     }
 })
+watch(() => options.value.itemsPerPage, (newValue) => {
+    if (newValue) {
+        refresh()
+    }
+}, { deep: true })
 </script>
 
 <template>
@@ -196,12 +201,7 @@ watch(status, (newValue) => {
 
         </VRow>
         <VDataTable :headers="headers" :items="store.certificates?.data || []" :loading="load" :hover="true"
-            loading-text="yuklanmoqda" :row-props="({ item, index }) => {
-                return {
-                    class: index % 2 === 0 ? 'green-row' : 'red-row',
-                    style: item.id === 1 ? 'opacity: 0.5' : ''
-                }
-            }">
+            loading-text="yuklanmoqda" :items-per-page="options.itemsPerPage">
             <template #item="{ item, columns }">
                 <tr :class="getRowProps(item)">
                     <td v-for="column in columns" :key="column.key">
