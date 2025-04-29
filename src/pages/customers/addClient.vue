@@ -1,6 +1,5 @@
 <script setup>
 import { useClient } from '@/@core/stores/client'
-import { reactive } from 'vue'
 import { VForm } from 'vuetify/components/VForm'
 
 const store = useClient()
@@ -13,7 +12,7 @@ definePage({
 })
 const refForm = ref()
 
-const clientData = reactive({
+const clientData = ref({
     operator: '', //✅
     typeCert: '', //✅
     typeClient: '', //✅
@@ -93,39 +92,21 @@ const onSubmit = () => {
 
 
         const formData = new FormData()
-        formData.append('operator', clientData.operator)
-        formData.append('typeCert', clientData.typeCert)
-        formData.append('typeClient', clientData.typeClient)
-        formData.append('cert_type', clientData.cert_type)
-        formData.append('local_code', clientData.local_code)
-
-        formData.append('cname', clientData.cname)
-        formData.append('sname', clientData.sname)
-        formData.append('iabsID', clientData.iabsID)
-        formData.append('password', clientData.password)
-        formData.append('location', clientData.location)
-        formData.append('state', clientData.state)
-        formData.append('country', clientData.country)
-        formData.append('address', clientData.address)
-        formData.append('email', clientData.email)
-        formData.append('organisation', clientData.organisation)
-        formData.append('phone', clientData.phone)
-        formData.append('ou', clientData.ou)
-        formData.append('inn', clientData.inn)
-        formData.append('pinfl', clientData.pinfl)
-
-        formData.append('accname', clientData.accname)
-        formData.append('job', clientData.job)
-        formData.append('token_type', clientData.token_type)
-        formData.append('token_sn', clientData.token_sn)
-        formData.append('token_serialnumber', clientData.token_serialnumber)
-        formData.append('csr', clientData.csr)
-        formData.append('container', clientData.container)
-        formData.append('fileToUpload', clientData.fileToUpload)
-
-        console.log(valid);
+        console.log(clientData.value.fileToUpload, 'fileToUpload');
 
 
+        for (const key in clientData.value) {
+            const value = clientData.value[key]
+
+            // // Agar fayl bo‘lsa va null bo‘lmasa, append qilamiz
+            // if (key === 'fileToUpload' && value) {
+            //     formData.append(key, value)
+            // }
+            // // Oddiy qiymatlar uchun
+            // else if (value !== undefined && value !== null) {
+            formData.append(key, value)
+            // }
+        }
 
 
 
@@ -159,8 +140,14 @@ const onSubmit = () => {
 
 const handleFileChange = (event) => {
     const file = event.target.files[0];
+    console.log(
+        file
+    );
+
 
     if (file) {
+        console.log('file');
+
         fileRequired.value = false
         clientData.fileToUpload = file;
     } else {
