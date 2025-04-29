@@ -114,6 +114,7 @@
 
     <template>
         <VCard>
+            <button @click="$router.push('/customers/addClient')" class="border">add Client</button>
 
 
 
