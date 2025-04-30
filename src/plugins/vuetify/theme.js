@@ -30,6 +30,7 @@ export const themes = {
       'perfect-scrollbar-thumb': '#DBDADE',
       'skin-bordered-background': '#fff',
       'skin-bordered-surface': '#fff',
+      'cancel': '#007AFF',
     },
     variables: {
       'code-color': '#d400ff',

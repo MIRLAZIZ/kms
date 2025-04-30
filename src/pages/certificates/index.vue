@@ -3,8 +3,10 @@ import { useCertificate } from '@/@core/stores/certicate'
 import { useToast } from '@/@core/stores/toastConfig'
 import EditClient from '@/components/clients/EditClient.vue'
 import DeleteDialog from "@/components/DeleteDialog.vue"
+import jsPDF from 'jspdf'
 import { useI18n } from 'vue-i18n'
 import { VDataTable } from 'vuetify/labs/VDataTable'
+
 
 
 
@@ -25,17 +27,20 @@ const isDialogVisible = ref(false)
 
 
 const deleteItemConfirm = () => {
-    store.deleteCertificate(itemId.value)
-        .then(() => {
-            storetoast.successToast(t('settingsModule.user_deleted'))
-            deleteDialog.value = false
-            itemId.value = null
-            refresh()
-        }).catch(error => {
-            storetoast.errorsNotfications(error.response._data.errors)
+
+    console.log('deleteItemConfirm');
+
+    // store.deleteCertificate(itemId.value)
+    //     .then(() => {
+    //         storetoast.successToast(t('settingsModule.user_deleted'))
+    //         deleteDialog.value = false
+    //         itemId.value = null
+    //         refresh()
+    //     }).catch(error => {
+    //         storetoast.errorsNotfications(error.response._data.errors)
 
 
-        })
+    //     })
 }
 
 
@@ -57,6 +62,7 @@ const headers = [
     { title: t('clients.mail'), key: 'cert_from' },
     { title: t('clients.subdivision'), key: 'cert_to' },
     { title: t('clients.inn'), key: 'status' },
+    { title: 'pdf', key: 'pdf' },
     { title: t('settingsModule.action'), key: 'actions' },
 
 ]
@@ -65,15 +71,11 @@ const headers = [
 
 
 
-const deleteUser = (id) => {
+const deleteItem = (id) => {
     itemId.value = id
     deleteDialog.value = true
 }
 
-const editUser = (id) => {
-    updateDataId.value = id
-    isAddNewUserDrawerVisible.value = true
-}
 
 const refresh = () => {
     store.fetchCertificate(options.value.itemsPerPage, options.value.page)
@@ -119,6 +121,12 @@ const statuFilterData = ref([
     { value: 2, label: 'Обновлен' },
 
 ])
+
+const statusText = (status) => {
+    if (status === 3) return { class: 'active', text: 'Активный' }
+    if (status === 1) return { class: 'error', text: 'Отклоненные' }
+    if (status === 2) return { class: 'history', text: 'Обновлен' }
+}
 watch(status, (newValue) => {
     if (newValue) {
         store.filterCertificate(newValue)
@@ -132,6 +140,27 @@ watch(() => options.value.itemsPerPage, (newValue) => {
         refresh()
     }
 }, { deep: true })
+
+
+
+
+
+
+const downloadPDF = (data) => {
+
+    const doc = new jsPDF()
+    doc.setFont("helvetica");
+    doc.text('Регистрационный сертификат' + ":" + data.cname, 10, 10)
+    doc.text(data.cert_sn, 10, 20)
+    doc.text(data.token_sn, 10, 30)
+    doc.text(data.cert_from, 10, 40)
+    doc.text(data.cert_to, 10, 50)
+    doc.save(data.cname + '.pdf')
+
+
+}
+
+
 </script>
 
 <template>
@@ -211,36 +240,29 @@ watch(() => options.value.itemsPerPage, (newValue) => {
 
                             <!-- actions ustunini alohida chiqarish -->
                             <template v-if="column.key === 'actions'">
-                                <div class=" d-flex justify-center">
-                                    <VBtn icon variant="text" size="small" color="medium-emphasis">
-                                        <VIcon size="24" icon="tabler-dots-vertical" />
-                                        <VMenu activator="parent">
-                                            <VList>
-                                                <VListItem link @click="editUser(item.id)">
-                                                    <template #prepend>
-                                                        <VIcon icon="tabler-pencil" />
-                                                    </template>
-                                                    <VListItemTitle>Edit</VListItemTitle>
-                                                </VListItem>
-
-                                                <VListItem @click="deleteUser(item.id)">
-                                                    <template #prepend>
-                                                        <VIcon icon="tabler-trash" />
-                                                    </template>
-                                                    <VListItemTitle>Delete</VListItemTitle>
-                                                </VListItem>
-
-                                                <VListItem @click="$router.push(`customers/client/${item.id}`)">
-                                                    <template #prepend>
-                                                        <VIcon icon="tabler-eye" />
-                                                    </template>
-                                                    <VListItemTitle>Show</VListItemTitle>
-                                                </VListItem>
-                                            </VList>
-                                        </VMenu>
-                                    </VBtn>
+                                <div class="py-2">
+                                    <VListItemTitle class=" cursor-pointer text-cancel " @click="deleteItem(item.id)"
+                                        v-if="item.status == 3">
+                                        Bekor
+                                        qilish
+                                    </VListItemTitle>
+                                    <span v-else class="">Bekor qilingan</span>
                                 </div>
+
+
                             </template>
+
+                            <template v-else-if="column.key === 'status'"><span v-if="item.status"
+                                    :class="statusText(item.status).class">{{ statusText(item.status).text }}</span>
+                            </template>
+                            <template v-else-if="column.key === 'pdf'">
+                                <VListItemTitle class=" cursor-pointer text-cancel " @click="downloadPDF(item)">
+                                    download
+                                </VListItemTitle>
+
+
+                            </template>
+
 
                             <!-- boshqa ustunlar uchun oddiy value -->
                             <template v-else>
@@ -310,5 +332,17 @@ watch(() => options.value.itemsPerPage, (newValue) => {
 
 .green-row {
     background-color: #ffd0d4 !important;
+}
+
+.active {
+    color: #28C76F !important;
+}
+
+.history {
+    color: #00BAD1 !important;
+}
+
+.error {
+    color: #FF4C51 !important;
 }
 </style>

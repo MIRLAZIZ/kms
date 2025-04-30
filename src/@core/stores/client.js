@@ -72,7 +72,8 @@ export const useClient = defineStore("client", {
 
             return await $api(`api/client/store`, {
                 method: 'Post',
-                body: data
+                body: data,
+                redirect: 'error'
             })
         },
 

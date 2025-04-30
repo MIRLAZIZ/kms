@@ -13,38 +13,37 @@ definePage({
 const refForm = ref()
 
 const clientData = ref({
-    operator: '', //✅
-    typeCert: '', //✅
-    typeClient: '', //✅
-    cert_type: '', //✅
-    local_code: '', //✅
+    operator: null, //✅
+    typeCert: 'dfgg', //✅
+    typeClient: null, //✅
+    cert_type: 'dfgf', //✅
+    local_code: 'fdgdf', //✅
 
-    cname: '', //✅
-    sname: '',  //✅
-    iabsID: '',  //✅ 
-    password: '',
-    location: '',
-    state: '',
-    country: '',
-    address: '',
-    email: '',
-    organisation: '',
-    phone: '',
-    ou: '',
-    inn: '',
-    pinfl: '',
+    cname: 'dfgfd', //✅
+    sname: 'fgd',  //✅
+    iabsID: 'fdg',  //✅ 
+    password: 123456,
+    location: 'test',
+    state: 'state',
+    country: 'UZ',
+    address: 'addres',
+    email: 'emailll@gmail.com',
+    organization: 'test',
+    phone: '1233456789',
+    ou: 'jadskl',
+    inn: 'asd',
+    pinfl: 'adsfa',
 
-    accname: '',
-    job: '',
-    token_type: '',
+    accname: 'fasdf',
+    job: 'dsdfsdf',
+    token_type: null,
     token_sn: '',
-    token_serialnumber: '',
-    csr: '',
-    container: '',
+    token_serialnumber: '2345',
+    csr: 'sdfd',
+    container: 'sdfdfs',
     fileToUpload: null,
 
 })
-const fileRequired = ref(false)
 
 
 
@@ -83,13 +82,6 @@ const fileRequired = ref(false)
 const onSubmit = () => {
 
     refForm.value?.validate().then(({ valid }) => {
-        if (!clientData.fileToUpload) {
-            fileRequired.value = true
-        } else {
-            fileRequired.value = false
-        }
-
-
 
         const formData = new FormData()
         console.log(clientData.value.fileToUpload, 'fileToUpload');
@@ -98,15 +90,19 @@ const onSubmit = () => {
         for (const key in clientData.value) {
             const value = clientData.value[key]
 
-            // // Agar fayl bo‘lsa va null bo‘lmasa, append qilamiz
-            // if (key === 'fileToUpload' && value) {
-            //     formData.append(key, value)
-            // }
-            // // Oddiy qiymatlar uchun
-            // else if (value !== undefined && value !== null) {
-            formData.append(key, value)
-            // }
+            // Agar fayl bo‘lsa va null bo‘lmasa, append qilamiz
+            if (key === 'fileToUpload' && value) {
+                console.log(value[0]);
+
+                formData.append(key, value[0])
+            }
+            // Oddiy qiymatlar uchun
+            else if (value !== undefined && value !== null) {
+                formData.append(key, value)
+            }
         }
+
+
 
 
 
@@ -137,23 +133,35 @@ const onSubmit = () => {
     })
 }
 
-
-const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    console.log(
-        file
-    );
+const token_type = [
+    { value: 'ePass/iKey', label: 'ePass/iKey' },
+    { value: 'virtual', label: 'Virtual token' },
+    { value: 'smartcard', label: 'BST' },]
 
 
-    if (file) {
-        console.log('file');
 
-        fileRequired.value = false
-        clientData.fileToUpload = file;
-    } else {
-        fileRequired.value = true
-    }
-};
+const operator = [
+    { value: '1', label: 'admin' },
+    { value: '3', label: 'limited' },
+    { value: '4', label: 'operator' },
+]
+
+
+
+const typeClient = [
+    { value: '1', label: 'Юридическое лицо' },
+    { value: '2', label: 'Физическое лицо' },
+]
+
+
+const typeCert = [
+    { value: '2', label: 'Интернет банкинг' },
+    { value: '5', label: 'Мобильный банкинг Metin' },
+    { value: '4', label: 'Мобильный банкинг iABS' },
+    { value: '3', label: 'Мобильный банкинг PFX' },
+    { value: '1', label: 'Пользователь iABS' },
+]
+
 
 </script>
 
@@ -171,18 +179,20 @@ const handleFileChange = (event) => {
 
                 <!-- operator  -->
                 <VCol cols="12" md="6">
-                    <AppTextField v-model="clientData.operator" label="Operator" />
+                    <AppSelect v-model="clientData.operator" label="Operator" :items="operator" item-title="label"
+                        item-value="value" />
                 </VCol>
 
                 <!-- typeCert  -->
                 <VCol cols="12" md="6">
-                    <AppSelect v-model="clientData.typeCert" label="typeCert"
-                        :items="['user', 'admin', 'limited', 'operator']" />
+                    <AppSelect v-model="clientData.typeCert" label="typeCert" :items="typeCert" item-title="label"
+                        item-value="value" />
                 </VCol>
 
                 <!-- typeClient -->
                 <VCol cols="12" md="6">
-                    <AppTextField v-model="clientData.typeClient" label="typeClient" />
+                    <AppSelect v-model="clientData.typeClient" label="typeClient" :items="typeClient" item-title="label"
+                        item-value="value" />
                 </VCol>
 
 
@@ -244,8 +254,8 @@ const handleFileChange = (event) => {
 
                 <!-- type token  -->
                 <VCol cols="12" md="6">
-                    <AppSelect v-model="clientData.token_type" label="type token"
-                        :items="['user', 'admin', 'limited', 'operator']" />
+                    <AppSelect v-model="clientData.token_type" label="type token" item-title="label" item-value="value"
+                        :items="token_type" />
                 </VCol>
 
                 <!-- token_sn -->
@@ -259,25 +269,13 @@ const handleFileChange = (event) => {
 
 
                 <!-- file upload  -->
-                <VCol cols="12" md="6" class="">
-                    <label> {{ $t('clients.attachRequestFile') }}<span class="asterisk">*</span>
+                <VCol cols="12" md="6">
+                    <label>Прикрепить файл запроса<span class="asterisk">*</span>
                     </label>
-
-                    <div class="custom-file-upload border " :class="{ 'fileInput': fileRequired }">
-                        <label for="file-upload">
-                            <VIcon icon="tabler-upload" />
-                            <span id="file-name">{{ $t('clients.chooseFile') }}</span>
-                        </label>
-                        <input id="file-upload" type="file" hidden @change="handleFileChange">
-                    </div>
-                    <small class="asterisk" v-if="fileRequired">this field is required</small>
-
-
+                    <VFileInput v-model="clientData.fileToUpload" color="primary" variant="outlined"
+                        :rules="[requiredValidator]" />
                 </VCol>
-                <!-- <VCol cols="12" md="6">
-                    <VTextField v-model="clientData.token_serialnumber" label="token_serialnumber"
-                        append-inner-icon="tabler-eye-off" :rules="[requiredValidator]" :requireInput="true" />
-                </VCol> -->
+
                 <VCol cols="12">
                     <VBtn type="submit">
                         Submit

@@ -17,14 +17,8 @@ const configStore = useLayoutConfigStore()
 </script>
 
 <template>
-  <div
-    class="layout-wrapper"
-    :class="configStore._layoutClasses"
-  >
-    <div
-      class="layout-navbar-and-nav-container"
-      :class="configStore.isNavbarBlurEnabled && 'header-blur'"
-    >
+  <div class="layout-wrapper" :class="configStore._layoutClasses">
+    <div class="layout-navbar-and-nav-container" :class="configStore.isNavbarBlurEnabled && 'header-blur'">
       <!-- 👉 Navbar -->
       <div class="layout-navbar">
         <div class="navbar-content-container">
