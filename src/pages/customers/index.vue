@@ -73,6 +73,7 @@
     }
 
     const refresh = () => {
+        load.value = true
         store.fetchClient(options.value.itemsPerPage, options.value.page)
             .then(() => {
                 useClient
@@ -81,14 +82,14 @@
                 load.value = false
             }).catch(error => {
 
-                // if (error.response.status >= 500) {
-                //     storetoast.errorToast('server xatoligi')
+                if (error.response.status >= 500) {
+                    storetoast.errorToast('server xatoligi')
 
-                // }
-                // else {
-                //     storetoast.errorsNotfications(error.response._data.errors)
+                }
+                else {
+                    storetoast.errorsNotfications(error.response._data.errors)
 
-                // }
+                }
 
                 load.value = false
             })
@@ -110,6 +111,14 @@
         if (item.status === 0) return 'green-row'
         return {}
     }
+
+    watch(() => options.value.itemsPerPage, (newValue) => {
+        if (newValue) {
+            refresh()
+        }
+    }, { deep: true })
+
+
 </script>
 
     <template>
@@ -121,18 +130,20 @@
             <VRow class="px-4 py-4">
                 <VCol>
                     <p class="text-22 font-roboto">
-                        <VIcon size="22" icon="tabler-user" /> {{ $t('settingsModule.control') }}
+                        <VIcon size="22" icon="tabler-users" /> {{ $t('clients.title') }}
                     </p>
                 </VCol>
                 <VCol class="d-flex justify-end">
 
 
                     <VCol cols="12" sm="6">
-                        <AppTextField placeholder="Search" density="compact" prepend-inner-icon="tabler-search" />
+                        <AppTextField :placeholder="$t('search')" density="compact"
+                            prepend-inner-icon="tabler-search" />
                     </VCol>
                     <!-- 👉 Select Status -->
                     <VCol cols="12" sm="4">
-                        <AppSelect placeholder="Select Status" :items="[1, 2, 3, 4]" clearable clear-icon="tabler-x" />
+                        <AppSelect :placeholder="$t('select_status')" :items="[1, 2, 3, 4]" clearable
+                            clear-icon="tabler-x" />
                     </VCol>
 
                     <VCol cols="12" sm="5">
@@ -177,12 +188,7 @@
 
             </VRow>
             <VDataTable :headers="headers" :items="store.clients.data || []" :loading="load" :hover="true"
-                loading-text="yuklanmoqda" :row-props="({ item, index }) => {
-                    return {
-                        class: index % 2 === 0 ? 'green-row' : 'red-row',
-                        style: item.id === 1 ? 'opacity: 0.5' : ''
-                    }
-                }">
+                loading-text="yuklanmoqda">
                 <template #item="{ item, columns }">
                     <tr :class="getRowProps(item)">
                         <td v-for="column in columns" :key="column.key">

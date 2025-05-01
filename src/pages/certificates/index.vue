@@ -51,12 +51,12 @@ const status = ref(null)
 
 const headers = [
     { title: '№', key: 'id' },
-    { title: t('clients.owner'), key: 'cname' },
-    { title: t('clients.city'), key: 'token_sn' },
-    { title: t('clients.address'), key: 'cert_sn' },
-    { title: t('clients.mail'), key: 'cert_from' },
-    { title: t('clients.subdivision'), key: 'cert_to' },
-    { title: t('clients.inn'), key: 'status' },
+    { title: t('certificates.owners_fullname'), key: 'cname' },
+    { title: t('certificates.token_seriyal'), key: 'token_sn' },
+    { title: t('certificates.certificate_seriyal'), key: 'cert_sn' },
+    { title: t('certificates.from_date'), key: 'cert_from' },
+    { title: t('certificates.until_date'), key: 'cert_to' },
+    { title: t('certificates.date'), key: 'created_at' },
     { title: t('settingsModule.action'), key: 'actions' },
 
 ]
@@ -76,13 +76,13 @@ const editUser = (id) => {
 }
 
 const refresh = () => {
+    load.value = true
     store.fetchCertificate(options.value.itemsPerPage, options.value.page)
         .then(() => {
 
 
             load.value = false
         }).catch(error => {
-            console.log(error.response.status);
             if (error.response.status >= 500) {
                 storetoast.errorToast('server xatoligi')
 
@@ -109,16 +109,17 @@ const getRowProps = (item) => {
 
     if (!item) return {}
 
-    if (item.id === 1) return 'green-row'
+    if (item.status === 0) return 'green-row'
     return {}
 }
 
 const statuFilterData = ref([
-    { value: 3, label: 'Активный' },
-    { value: 1, label: 'Отклоненные' },
-    { value: 2, label: 'Обновлен' },
-
+    { value: 0, label: t('certificates.inactive') },
+    { value: 1, label: t('certificates.active') },
+    { value: 2, label: t('certificates.mobile') },
+    { value: 3, label: t('certificates.updated') },
 ])
+
 watch(status, (newValue) => {
     if (newValue) {
         store.filterCertificate(newValue)
@@ -143,39 +144,56 @@ watch(() => options.value.itemsPerPage, (newValue) => {
         <VRow class="px-4 py-4">
             <VCol>
                 <p class="text-22 font-roboto">
-                    <VIcon size="22" icon="tabler-user" /> {{ $t('settingsModule.control') }}
+                    <VIcon size="22" icon="tabler-file-certificate" /> {{ $t('certificates.title') }}
                 </p>
             </VCol>
             <VCol class="d-flex justify-end">
 
 
                 <VCol cols="12" sm="6">
-                    <AppTextField placeholder="Search" density="compact" prepend-inner-icon="tabler-search" />
+                    <AppTextField :placeholder="$t('search')" density="compact" prepend-inner-icon="tabler-search" />
                 </VCol>
                 <!-- 👉 Select Status -->
                 <VCol cols="12" sm="4">
-                    <AppSelect placeholder="Select Status" :items="statuFilterData" v-model="status" clearable
+                    <AppSelect :placeholder="$t('select_status')" :items="statuFilterData" v-model="status" clearable
                         clear-icon="tabler-x" item-value="value" item-title="label" />
                 </VCol>
 
 
-                <VCol cols="12" sm="5">
-                    <div class="w-100 h-100 border rounded d-flex align-center justify-space-between px-4">
+
+                <VCol cols="12" sm="5   ">
+                    <div class="w-100 h-100 border rounded d-flex align-center gap-2 px-4">
                         <div>
                             {{ $t('clients.all') }}
                         </div>
+
                         <div>
                             <VIcon size="24" icon="tabler-circle-check" color="#28C76F" class="mr-1" />
-                            <span>3</span>
+                            <span>{{ store.certificates?.status_report?.active ?
+                                store.certificates?.status_report?.active :
+                                0 }}</span>
                         </div>
+
                         <div>
+                            <VIcon size="24" icon="tabler-rotate" color="#00BAD1" class="mr-1" />
+                            <span>{{ store.certificates?.status_report?.updated ?
+                                store.certificates?.status_report?.updated
+                                : 0
+                            }}</span>
+                        </div>
+
+
+
+
+                        <!-- <div>
                             <VIcon size="24" icon="tabler-circle-x" color="#FF4C51" class="mr-1" />
-                            <span>5</span>
-                        </div>
-                        <div>
-                            <VIcon size="24" icon="tabler-history" color="#00BAD1" class="mr-1" />
-                            <span>3</span>
-                        </div>
+                            <span>{{ store.certificates?.status_report?.rejected ?
+                                store.certificates?.status_report?.rejected :
+                                0 }}</span>
+                        </div> -->
+
+
+
 
 
 
@@ -188,7 +206,7 @@ watch(() => options.value.itemsPerPage, (newValue) => {
                 <VCol col="12">
 
                     <AppSelect :model-value="options.itemsPerPage" :items="[
-                        { value: 10, title: '10' },
+                        { value: 12, title: '12' },
                         { value: 25, title: '25' },
                         { value: 50, title: '50' },
                         { value: 100, title: '100' },

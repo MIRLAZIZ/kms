@@ -65,9 +65,6 @@ const closeNavigationDrawer = () => {
     })
 }
 
-// <!-- "internet_banking": "Интернет банкинг",
-//                             "mobile_banking": "Мобильный банкинг",
-//                             "iabs_user": "Пользователь iABS" -->
 
 const typeclient = ref([
     { value: 2, label: t('clients.internet_banking') },
@@ -76,15 +73,11 @@ const typeclient = ref([
 
 ])
 
-const onSubmit = () => {
-    console.log(clientData.value);
+const sendClientUpdate = () => {
 
     refForm.value?.validate().then(({ valid }) => {
 
-
         const formDataa = new FormData()
-        formDataa.append('data', 'test')
-
         formDataa.append('address', clientData.value.address)
         formDataa.append('client_type', clientData.value.client_type)
         formDataa.append('cname', clientData.value.cname)
@@ -98,11 +91,6 @@ const onSubmit = () => {
         formDataa.append('pinfl', clientData.value.pinfl)
         formDataa.append('state', clientData.value.state)
         formDataa.append('fileToUpload', clientData.value.fileToUpload)
-
-
-
-
-
         if (valid) {
 
             store.updateClient(props.update_dataId, formDataa)
@@ -185,7 +173,7 @@ const handleFileChange = async (event) => {
 
 
                     <!-- 👉 Form -->
-                    <VForm ref="refForm" v-model="isFormValid" @submit.prevent="onSubmit">
+                    <VForm ref="refForm" v-model="isFormValid" @submit.prevent="sendClientUpdate">
                         <VRow>
 
 

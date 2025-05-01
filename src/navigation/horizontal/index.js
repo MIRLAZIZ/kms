@@ -39,14 +39,14 @@ export default [
     subject: 'AclDemo',
   },
   {
-    title: 'requests.request',
+    title: 'requests.title',
     to: { name: 'requests' },
     icon: { icon: 'tabler-sort-descending' },
     action: 'read',
     subject: 'AclDemo',
   },
   {
-    title: 'Certificates.title',
+    title: 'certificates.title',
     to: { name: 'certificates' },
     icon: { icon: 'tabler-file-certificate' },
     action: 'read',

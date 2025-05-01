@@ -52,12 +52,12 @@ const status = ref(null)
 
 const headers = [
     { title: '№', key: 'id' },
-    { title: 'Токен №', key: 'token_sn' },
-    { title: 'Видан (CN)', key: 'cname' },
-    { title: 'Организация (О)', key: 'organization' },
-    { title: 'Подразделение (ОU)', key: 'org_unit' },
-    { title: t('settingsModule.branch'), key: 'branch' },
-    { title: 'type', key: 'type' },
+    { title: t('requests.token'), key: 'token_sn' },
+    { title: t('requests.issued'), key: 'cname' },
+    { title: t('requests.organization'), key: 'organization' },
+    { title: t('requests.orgUnit'), key: 'org_unit' },
+    { title: t('requests.branch'), key: 'branch' },
+    { title: t('requests.type'), key: 'type' },
     { title: t('settingsModule.action'), key: 'actions' },
 ]
 
@@ -100,6 +100,7 @@ const statusCreate = (value, id) => {
 }
 
 const refresh = () => {
+    load.value = true
     store.fetchRequest(options.value.itemsPerPage, options.value.page)
         .then(() => {
 
@@ -130,6 +131,13 @@ watch(status, (newValue) => {
 
 
 
+watch(() => options.value.itemsPerPage, (newValue) => {
+    if (newValue) {
+        refresh()
+    }
+}, { deep: true })
+
+
 onMounted(() => {
     refresh()
 
@@ -143,10 +151,9 @@ const getRowProps = (item) => {
 }
 
 const statuFilterData = ref([
-    { value: 0, label: 'new' },
-    { value: 1, label: 'tasdiqlangan' },
-    { value: 2, label: 'rad etilgan' },
-
+    { value: 0, label: t('requests.new') },
+    { value: 1, label: t('requests.approved') },
+    { value: 2, label: t('requests.rejected') },
 ])
 
 
@@ -158,18 +165,18 @@ const statuFilterData = ref([
         <VRow class="px-4 py-4">
             <VCol>
                 <p class="text-22 font-roboto">
-                    <VIcon size="22" icon="tabler-user" /> {{ $t('settingsModule.control') }}
+                    <VIcon size="22" icon="tabler-sort-descending" /> {{ $t('requests.title') }}
                 </p>
             </VCol>
             <VCol class="d-flex justify-end">
 
 
                 <VCol cols="12" sm="6">
-                    <AppTextField placeholder="Search" density="compact" prepend-inner-icon="tabler-search" />
+                    <AppTextField :placeholder="$t('search')" density="compact" prepend-inner-icon="tabler-search" />
                 </VCol>
                 <!-- 👉 Select Status -->
                 <VCol cols="12" sm="4">
-                    <AppSelect placeholder="Select Status" :items="statuFilterData" v-model="status" clearable
+                    <AppSelect :placeholder="$t('select_status')" :items="statuFilterData" v-model="status" clearable
                         clear-icon="tabler-x" item-value="value" item-title="label" />
                 </VCol>
 
@@ -183,7 +190,7 @@ const statuFilterData = ref([
                         <div>
                             <VIcon size="24" icon="tabler-history" color="#00BAD1" class="mr-1" />
                             <span>{{ store.requests?.status_report?.new ? store.requests?.status_report?.new : 0
-                                }}</span>
+                            }}</span>
                         </div>
 
 

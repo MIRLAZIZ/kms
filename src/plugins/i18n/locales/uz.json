@@ -7,6 +7,8 @@
   "rows_per_page": "Har bir sahifadagi qatorlar",
   "no_internet": "Internet aloqasi mavjud emas. Iltimos, ulanishingizni tekshiring va qayta urinib ko‘ring.",
   "required_fiels": "Majburi bo'lgan maydonlarni to'ldiring.",
+  "search": "Qidiruv",
+  "select_status": "Status-ni tanlang",
   "settingsModule": {
     "control": "Nazorat",
     "add": "Qo'shish",
@@ -65,9 +67,28 @@
     "iabs_user": "iABS foydalanuvchisi"
   },
   "requests": {
-    "request": "So'rovlar"
+    "title": "So'rovlar",
+    "token": "Token №",
+    "issued": "Berilgan (CN)",
+    "organization": "Tashkilot (O)",
+    "orgUnit": "Bo‘lim (OU)",
+    "branch": "Filial",
+    "type": "Turi",
+    "new": "Yangi",
+    "approved": "Tasdiqlangan",
+    "rejected": "Rad etilgan"
   },
-  "Certificates": {
-    "title": "Сертификати"
+  "certificates": {
+    "title": "Сертификати",
+    "owners_fullname": "Egasining to‘liq ismi",
+    "token_seriyal": "token seriya raqami",
+    "certificate_seriyal": "sertifikat seriya raqami",
+    "from_date": "(sana) dan",
+    "until_date": "(sana) gacha",
+    "date": "sana",
+    "inactive": "Faol emas",
+    "active": "Faol",
+    "mobile": "Mobil",
+    "updated": "Yangilangan"
   }
 }

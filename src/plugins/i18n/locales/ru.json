@@ -7,6 +7,8 @@
   "rows_per_page": "Har bir sahifadagi qatorlar",
   "no_internet": "Internet aloqasi mavjud emas. Iltimos, ulanishingizni tekshiring va qayta urinib ko‘ring.",
   "required_fiels": "Заполните обязательные поля..",
+  "search": "Поиск",
+  "select_status": "Выберите статус",
   "settingsModule": {
     "control": "Управление",
     "add": "Добавить",
@@ -65,9 +67,28 @@
     "iabs_user": "Пользователь iABS"
   },
   "requests": {
-    "request": "Запросы"
+    "title": "Запросы",
+    "token": "Токен №",
+    "issued": "Выдан (CN)",
+    "organization": "Организация (О)",
+    "orgUnit": "Подразделение (ОU)",
+    "branch": "Филиал",
+    "type": "Тип",
+    "new": "Новый",
+    "approved": "Подтвержденный",
+    "rejected": "Отклонённый"
   },
-  "Certificates": {
-    "title": "Сертификати"
+  "certificates": {
+    "title": "Сертификати",
+    "owners_fullname": "ФИО владельца",
+    "token_seriyal": "серийный номер токена",
+    "certificate_seriyal": "серийный номер сертификата",
+    "from_date": "с (дата)",
+    "until_date": "до (дата)",
+    "date": "дата",
+    "inactive": "Неактивный",
+    "active": "Активный",
+    "mobile": "Мобильный",
+    "updated": "Обновлённый"
   }
 }
