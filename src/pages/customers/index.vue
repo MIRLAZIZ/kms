@@ -4,6 +4,7 @@
     import { useToast } from '@/@core/stores/toastConfig'
     import EditClient from '@/components/clients/EditClient.vue'
     import DeleteDialog from "@/components/DeleteDialog.vue"
+    import { computed } from 'vue'
     import { useI18n } from 'vue-i18n'
     import { VDataTable } from 'vuetify/labs/VDataTable'
 
@@ -48,7 +49,7 @@
 
 
 
-    const headers = [
+    const headers = computed(() => [
         { title: '№', key: 'id' },
         { title: t('clients.owner'), key: 'cname' },
         { title: t('clients.city'), key: 'location' },
@@ -58,7 +59,7 @@
         { title: t('clients.inn'), key: 'inn' },
         { title: t('settingsModule.branch'), key: 'branch' },
         { title: t('settingsModule.action'), key: 'actions' },
-    ]
+    ])
 
 
 
@@ -122,7 +123,7 @@
             <VRow class="px-4 py-4">
                 <VCol>
                     <p class="text-22 font-roboto">
-                        <VIcon size="22" icon="tabler-user" /> {{ $t('settingsModule.control') }}
+                        <VIcon size="22" icon="tabler-users" /> {{ $t('clients.title') }}
                     </p>
                 </VCol>
                 <VCol class="d-flex justify-end">

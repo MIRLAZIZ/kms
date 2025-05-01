@@ -46,7 +46,7 @@ export default [
     subject: 'AclDemo',
   },
   {
-    title: 'Certificates.title',
+    title: 'certificates.title',
     to: { name: 'certificates' },
     icon: { icon: 'tabler-file-certificate' },
     action: 'read',

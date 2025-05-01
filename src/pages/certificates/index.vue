@@ -7,9 +7,6 @@ import jsPDF from 'jspdf'
 import { useI18n } from 'vue-i18n'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
-
-
-
 const { t } = useI18n()
 definePage({
     meta: {
@@ -31,7 +28,7 @@ const deleteItemConfirm = () => {
     console.log('deleteItemConfirm');
 
     // store.deleteCertificate(itemId.value)
-    //     .then(() => {
+    //     .then(() => { 
     //         storetoast.successToast(t('settingsModule.user_deleted'))
     //         deleteDialog.value = false
     //         itemId.value = null
@@ -53,19 +50,28 @@ const status = ref(null)
 
 
 
+// "owner_name": "Ф.И.О владельца",
+//     "token_serial_number": "Серийный номер токена",
+//     "certificate_serial_number": "Серийный номер сертификата",
+//     "from_date": "С (дата)",
+//     "to_date": "До (дата)",
+//     "date": "Дата",
+//     "status": "Статус",
+//     "action": "Действие"
 
-const headers = [
+
+const headers = computed(() => [
     { title: '№', key: 'id' },
-    { title: t('clients.owner'), key: 'cname' },
-    { title: t('clients.city'), key: 'token_sn' },
-    { title: t('clients.address'), key: 'cert_sn' },
-    { title: t('clients.mail'), key: 'cert_from' },
-    { title: t('clients.subdivision'), key: 'cert_to' },
-    { title: t('clients.inn'), key: 'status' },
+    { title: t('certificates.owner_name'), key: 'cname' },
+    { title: t('certificates.token_serial_number'), key: 'token_sn' },
+    { title: t('certificates.certificate_serial_number'), key: 'cert_sn' },
+    { title: t('certificates.from_date'), key: 'cert_from' },
+    { title: t('certificates.to_date'), key: 'cert_to' },
+    { title: t('certificates.status'), key: 'status' },
     { title: 'pdf', key: 'pdf' },
     { title: t('settingsModule.action'), key: 'actions' },
+])
 
-]
 
 
 
@@ -111,7 +117,7 @@ const getRowProps = (item) => {
 
     if (!item) return {}
 
-    if (item.id === 1) return 'green-row'
+    if (item.status === 1) return 'green-row'
     return {}
 }
 
@@ -147,17 +153,21 @@ watch(() => options.value.itemsPerPage, (newValue) => {
 
 
 const downloadPDF = (data) => {
+    const doc = new jsPDF();
 
-    const doc = new jsPDF()
-    doc.setFont("helvetica");
-    doc.text('Регистрационный сертификат' + ":" + data.cname, 10, 10)
-    doc.text(data.cert_sn, 10, 20)
-    doc.text(data.token_sn, 10, 30)
-    doc.text(data.cert_from, 10, 40)
-    doc.text(data.cert_to, 10, 50)
-    doc.save(data.cname + '.pdf')
+    // Kirill shriftini qo'shish
+    doc.addFont('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf', 'Roboto', 'normal');
+    doc.setFont('Roboto');
 
+    // Dokumentga ma'lumotlarni yozish
+    doc.text('Регистрационный сертификат: ' + data.cname, 10, 10);
+    doc.text('Сертификат рақами: ' + data.cert_sn, 10, 20);
+    doc.text('Токен рақами: ' + data.token_sn, 10, 30);
+    doc.text('Сертификат санаси (дан): ' + data.cert_from, 10, 40);
+    doc.text('Сертификат санаси (гача): ' + data.cert_to, 10, 50);
 
+    // PDF faylni saqlash
+    doc.save(data.cname + '.pdf');
 }
 
 

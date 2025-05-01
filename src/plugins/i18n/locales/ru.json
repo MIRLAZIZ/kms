@@ -67,7 +67,15 @@
   "requests": {
     "request": "Запросы"
   },
-  "Certificates": {
-    "title": "Сертификати"
+  "certificates": {
+    "title": "Сертификати",
+    "owner_name": "Ф.И.О владельца",
+    "token_serial_number": "Серийный номер токена",
+    "certificate_serial_number": "Серийный номер сертификата",
+    "from_date": "С (дата)",
+    "to_date": "До (дата)",
+    "date": "Дата",
+    "status": "Статус",
+    "action": "Действие"
   }
 }

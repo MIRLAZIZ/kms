@@ -67,7 +67,15 @@
   "requests": {
     "request": "So'rovlar"
   },
-  "Certificates": {
-    "title": "Сертификати"
+  "certificates": {
+    "title": "Сертификати",
+    "owner_name": "F.I.O egasi",
+    "token_serial_number": "Token seriya raqami",
+    "certificate_serial_number": "Sertifikat seriya raqami",
+    "from_date": "Boshlanish sanasi",
+    "to_date": "Tugash sanasi",
+    "date": "Sana",
+    "status": "Holat",
+    "action": "Amal"
   }
 }
