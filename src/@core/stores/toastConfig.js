@@ -5,6 +5,7 @@ import 'vue3-toastify/dist/index.css';
 export const useToast = defineStore("toast", {
 
     state: () => ({
+        loginToast: false
 
     }),
     actions: {

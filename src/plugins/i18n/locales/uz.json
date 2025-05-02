@@ -80,15 +80,13 @@
   },
   "certificates": {
     "title": "Сертификати",
-    "owners_fullname": "Egasining to‘liq ismi",
-    "token_seriyal": "token seriya raqami",
-    "certificate_seriyal": "sertifikat seriya raqami",
-    "from_date": "(sana) dan",
-    "until_date": "(sana) gacha",
-    "date": "sana",
-    "inactive": "Faol emas",
-    "active": "Faol",
-    "mobile": "Mobil",
-    "updated": "Yangilangan"
+    "owner_name": "F.I.O egasi",
+    "token_serial_number": "Token seriya raqami",
+    "certificate_serial_number": "Sertifikat seriya raqami",
+    "from_date": "Boshlanish sanasi",
+    "to_date": "Tugash sanasi",
+    "date": "Sana",
+    "status": "Holat",
+    "action": "Amal"
   }
 }

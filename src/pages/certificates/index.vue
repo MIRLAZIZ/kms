@@ -3,10 +3,9 @@ import { useCertificate } from '@/@core/stores/certicate'
 import { useToast } from '@/@core/stores/toastConfig'
 import EditClient from '@/components/clients/EditClient.vue'
 import DeleteDialog from "@/components/DeleteDialog.vue"
+import jsPDF from 'jspdf'
 import { useI18n } from 'vue-i18n'
 import { VDataTable } from 'vuetify/labs/VDataTable'
-
-
 
 const { t } = useI18n()
 definePage({
@@ -25,17 +24,20 @@ const isDialogVisible = ref(false)
 
 
 const deleteItemConfirm = () => {
-    store.deleteCertificate(itemId.value)
-        .then(() => {
-            storetoast.successToast(t('settingsModule.user_deleted'))
-            deleteDialog.value = false
-            itemId.value = null
-            refresh()
-        }).catch(error => {
-            storetoast.errorsNotfications(error.response._data.errors)
+
+    console.log('deleteItemConfirm');
+
+    // store.deleteCertificate(itemId.value)
+    //     .then(() => { 
+    //         storetoast.successToast(t('settingsModule.user_deleted'))
+    //         deleteDialog.value = false
+    //         itemId.value = null
+    //         refresh()
+    //     }).catch(error => {
+    //         storetoast.errorsNotfications(error.response._data.errors)
 
 
-        })
+    //     })
 }
 
 
@@ -48,32 +50,37 @@ const status = ref(null)
 
 
 
+// "owner_name": "Ф.И.О владельца",
+//     "token_serial_number": "Серийный номер токена",
+//     "certificate_serial_number": "Серийный номер сертификата",
+//     "from_date": "С (дата)",
+//     "to_date": "До (дата)",
+//     "date": "Дата",
+//     "status": "Статус",
+//     "action": "Действие"
 
-const headers = [
+
+const headers = computed(() => [
     { title: '№', key: 'id' },
-    { title: t('certificates.owners_fullname'), key: 'cname' },
-    { title: t('certificates.token_seriyal'), key: 'token_sn' },
-    { title: t('certificates.certificate_seriyal'), key: 'cert_sn' },
-    { title: t('certificates.from_date'), key: 'cert_from' },
-    { title: t('certificates.until_date'), key: 'cert_to' },
-    { title: t('certificates.date'), key: 'created_at' },
+    { title: t('clients.owner'), key: 'cname' },
+    { title: t('clients.city'), key: 'token_sn' },
+    { title: t('clients.address'), key: 'cert_sn' },
+    { title: t('clients.mail'), key: 'cert_from' },
+    { title: t('clients.subdivision'), key: 'cert_to' },
+    { title: t('clients.inn'), key: 'status' },
     { title: t('settingsModule.action'), key: 'actions' },
-
-]
-
+])
 
 
 
 
-const deleteUser = (id) => {
+
+
+const deleteItem = (id) => {
     itemId.value = id
     deleteDialog.value = true
 }
 
-const editUser = (id) => {
-    updateDataId.value = id
-    isAddNewUserDrawerVisible.value = true
-}
 
 const refresh = () => {
     load.value = true
@@ -109,7 +116,7 @@ const getRowProps = (item) => {
 
     if (!item) return {}
 
-    if (item.status === 0) return 'green-row'
+    if (item.id === 1) return 'green-row'
     return {}
 }
 
@@ -119,7 +126,6 @@ const statuFilterData = ref([
     { value: 2, label: t('certificates.mobile') },
     { value: 3, label: t('certificates.updated') },
 ])
-
 watch(status, (newValue) => {
     if (newValue) {
         store.filterCertificate(newValue)
@@ -133,6 +139,31 @@ watch(() => options.value.itemsPerPage, (newValue) => {
         refresh()
     }
 }, { deep: true })
+
+
+
+
+
+
+const downloadPDF = (data) => {
+    const doc = new jsPDF();
+
+    // Kirill shriftini qo'shish
+    doc.addFont('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf', 'Roboto', 'normal');
+    doc.setFont('Roboto');
+
+    // Dokumentga ma'lumotlarni yozish
+    doc.text('Регистрационный сертификат: ' + data.cname, 10, 10);
+    doc.text('Сертификат рақами: ' + data.cert_sn, 10, 20);
+    doc.text('Токен рақами: ' + data.token_sn, 10, 30);
+    doc.text('Сертификат санаси (дан): ' + data.cert_from, 10, 40);
+    doc.text('Сертификат санаси (гача): ' + data.cert_to, 10, 50);
+
+    // PDF faylni saqlash
+    doc.save(data.cname + '.pdf');
+}
+
+
 </script>
 
 <template>
@@ -179,7 +210,7 @@ watch(() => options.value.itemsPerPage, (newValue) => {
                             <span>{{ store.certificates?.status_report?.updated ?
                                 store.certificates?.status_report?.updated
                                 : 0
-                            }}</span>
+                                }}</span>
                         </div>
 
 
@@ -229,36 +260,29 @@ watch(() => options.value.itemsPerPage, (newValue) => {
 
                             <!-- actions ustunini alohida chiqarish -->
                             <template v-if="column.key === 'actions'">
-                                <div class=" d-flex justify-center">
-                                    <VBtn icon variant="text" size="small" color="medium-emphasis">
-                                        <VIcon size="24" icon="tabler-dots-vertical" />
-                                        <VMenu activator="parent">
-                                            <VList>
-                                                <VListItem link @click="editUser(item.id)">
-                                                    <template #prepend>
-                                                        <VIcon icon="tabler-pencil" />
-                                                    </template>
-                                                    <VListItemTitle>Edit</VListItemTitle>
-                                                </VListItem>
-
-                                                <VListItem @click="deleteUser(item.id)">
-                                                    <template #prepend>
-                                                        <VIcon icon="tabler-trash" />
-                                                    </template>
-                                                    <VListItemTitle>Delete</VListItemTitle>
-                                                </VListItem>
-
-                                                <VListItem @click="$router.push(`customers/client/${item.id}`)">
-                                                    <template #prepend>
-                                                        <VIcon icon="tabler-eye" />
-                                                    </template>
-                                                    <VListItemTitle>Show</VListItemTitle>
-                                                </VListItem>
-                                            </VList>
-                                        </VMenu>
-                                    </VBtn>
+                                <div class="py-2">
+                                    <VListItemTitle class=" cursor-pointer text-cancel " @click="deleteItem(item.id)"
+                                        v-if="item.status == 3">
+                                        Bekor
+                                        qilish
+                                    </VListItemTitle>
+                                    <span v-else class="">Bekor qilingan</span>
                                 </div>
+
+
                             </template>
+
+                            <template v-else-if="column.key === 'status'"><span v-if="item.status"
+                                    :class="statusText(item.status).class">{{ statusText(item.status).text }}</span>
+                            </template>
+                            <template v-else-if="column.key === 'pdf'">
+                                <VListItemTitle class=" cursor-pointer text-cancel " @click="downloadPDF(item)">
+                                    download
+                                </VListItemTitle>
+
+
+                            </template>
+
 
                             <!-- boshqa ustunlar uchun oddiy value -->
                             <template v-else>
@@ -328,5 +352,16 @@ watch(() => options.value.itemsPerPage, (newValue) => {
 
 .green-row {
     background-color: #ffd0d4 !important;
+}
+.active {
+    color: #28C76F !important;
+}
+
+.history {
+    color: #00BAD1 !important;
+}
+
+.error {
+    color: #FF4C51 !important;
 }
 </style>

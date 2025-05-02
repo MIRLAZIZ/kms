@@ -69,7 +69,16 @@ export const useClient = defineStore("client", {
             return await $api(`api/device/delete/${id}`, {
                 method: 'delete'
             })
-        }
+        },
+        async createClients(data) {
+            console.log(data);
+
+            return await $api(`api/client/store`, {
+                method: 'Post',
+                body: data,
+                redirect: 'error'
+            })
+        },
 
     }
 })

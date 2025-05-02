@@ -80,15 +80,13 @@
   },
   "certificates": {
     "title": "Сертификати",
-    "owners_fullname": "ФИО владельца",
-    "token_seriyal": "серийный номер токена",
-    "certificate_seriyal": "серийный номер сертификата",
-    "from_date": "с (дата)",
-    "until_date": "до (дата)",
-    "date": "дата",
-    "inactive": "Неактивный",
-    "active": "Активный",
-    "mobile": "Мобильный",
-    "updated": "Обновлённый"
+    "owner_name": "Ф.И.О владельца",
+    "token_serial_number": "Серийный номер токена",
+    "certificate_serial_number": "Серийный номер сертификата",
+    "from_date": "С (дата)",
+    "to_date": "До (дата)",
+    "date": "Дата",
+    "status": "Статус",
+    "action": "Действие"
   }
 }

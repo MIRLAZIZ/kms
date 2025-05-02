@@ -4,6 +4,7 @@
     import { useToast } from '@/@core/stores/toastConfig'
     import EditClient from '@/components/clients/EditClient.vue'
     import DeleteDialog from "@/components/DeleteDialog.vue"
+    import { computed } from 'vue'
     import { useI18n } from 'vue-i18n'
     import { VDataTable } from 'vuetify/labs/VDataTable'
 
@@ -48,7 +49,7 @@
 
 
 
-    const headers = [
+    const headers = computed(() => [
         { title: '№', key: 'id' },
         { title: t('clients.owner'), key: 'cname' },
         { title: t('clients.city'), key: 'location' },
@@ -58,7 +59,7 @@
         { title: t('clients.inn'), key: 'inn' },
         { title: t('settingsModule.branch'), key: 'branch' },
         { title: t('settingsModule.action'), key: 'actions' },
-    ]
+    ])
 
 
 
@@ -123,6 +124,7 @@
 
     <template>
         <VCard>
+            <button @click="$router.push('/customers/addClient')" class="border">add Client</button>
 
 
 
